@@ -1,20 +1,28 @@
 ### Setup
 
-Copy `.env.example` in the project root to `.env.development / .env.production` and edit your preferences.
+1. Copy `.env.example` in the project root to `.env.development / .env.production` and edit your preferences.
 
 ```dotenv
 SITE_URL=http://localhost:8000
 WP_GRAPHQL_URL=https://wordpress/wp/graphql
 ```
 
-### Install
+2. install dependencies
 
 ```shell
 yarn
 ```
 
-```TypeScript
+3. create Flexible.tsx in imports
 
+```shell
+cd src/components/imports
+touch Flexible.tsx
+```
+
+4. Add content to Flexible.tsx
+
+```TypeScript
 import * as React from 'react';
 
 export enum BlockType {}
@@ -46,11 +54,18 @@ const Flexible: React.FC<IFlexible> = ({ components }) => {
 };
 
 export default Flexible;
-
 ```
 
-```TypeScript
+5. Create page.tsx in templates
 
+```shell
+cd src/templates
+touch page.tsx
+```
+
+6. Add content to page.tsx
+
+```TypeScript
 import * as React from "react";
 import { ThemeProvider } from "styled-components";
 
@@ -96,11 +111,11 @@ const PageTemplate: React.FC<IPageContext> = ({
 };
 
 export default PageTemplate;
-
 ```
 
-```JavaScript
+7. Copy/Paste the content to gatsby-node.js
 
+```JavaScript
 const path = require("path");
 
 const fetchPages = require("./node/fetch-pages");
@@ -124,11 +139,171 @@ module.exports.createPages = async (gatsbyUtilities) => {
 
   await Promise.all(promise);
 };
+```
 
+### Create a component
 
+!Important!
+Add theme to your wordpress setup
+
+1. Go to the acf folder and create a new Flexible content block.
+
+```sh
+  cd cms/acf
+  touch block-name.php
+```
+
+3. Add this template to the file
+
+```php
+<?php
+require_once('utils/graphql-label.php');
+require_once('utils/to-snake-case.php');
+
+$label = 'Block name'; // ⬅️ Rename me
+
+// ⬇️ Rename me
+$block_name = [
+  'key' => toSnakeCase($label),
+  'name' => toSnakeCase($label),
+  'label' => $label,
+  'sub_fields' => [
+    graphql_label($label), // Creates the label for gatsby component = BlockName
+    // Fields go here e.g.
+    // [
+    //   'key' => $label . 'header',
+    //   'label' => 'Header',
+    //   'name' => 'header',
+    //   'type' => 'text',
+    // ],
+  ],
+];
+```
+
+4. Add the block to blocks.php
+
+```sh
+  cd ..
+  code blocks.php
+```
+
+```php
+<?php
+
+require_once('acf/block-name.php');
+
+$blocks = [
+  $block_name,
+];
+```
+
+5. Create Gatsby component
+
+```shell
+cd src/components/layout-block
+
+mkdir BlockName
+
+cd BlockName
+
+touch index.ts
+touch BlockName.tsx
+touch BlockName.data.ts
+touch BlockName.styled.ts
+```
+
+6. Add content to index.ts
+
+```TypeScript
+export { default } from "./BlockName";
+```
+
+7. Add content to BlockName.tsx
+
+```TypeScript
+import * as React from "react";
+
+import S from "./H1.styled";
+
+interface BlockName {
+  // header: string;
+}
+
+const BlockName: React.FC<BlockName> = (data: BlockName) => {
+  return <S.BlockName></S.BlockName>;
+};
+
+export default BlockName;
+```
+
+8. Add content to BlockName.data.ts
+
+```TypeScript
+module.exports = () => `
+ // header
+`;
+```
+
+9. Add content to BlockName.styled.ts
+
+```TypeScript
+import styled from "styled-components";
+
+const BlockName = styled.div``;
+
+const S = {
+  BlockName
+}
+
+export default S;
+```
+
+9. Add BlockName component to Flexible.tsx
+
+```TypeScript
+import * as React from 'react';
+
+import BlockName from '@/components/layout-blocks/BlockName'; // ⬅️
+
+export enum BlockType {
+  BlockName // ⬅️
+}
+
+export interface IComponent {
+  label: BlockType;
+}
+
+export type IComponentTypes = typeof BlockName; // ⬅️
+
+export type IFlexible = {
+  components: ReadonlyArray<IComponent>;
+};
+
+const BlockComponents: {
+  [C in BlockType]: IComponentTypes;
+} = {
+  [BlockType.BlockName]: BlockName // ⬅️
+};
+
+const Flexible: React.FC<IFlexible> = ({ components }) => {
+  return (
+    <>
+      {components?.map((comp, index) => {
+        const Component = BlockComponents[BlockType[comp.label]];
+
+        return <Component key={index} {...comp} />;
+      })}
+    </>
+  );
+};
+
+export default Flexible;
 ```
 
 ### Run
+
+!Important!
+Create a component before running yarn start
 
 ```shell
 yarn start
