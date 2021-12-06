@@ -1,0 +1,61 @@
+{
+  "name": "qte.se-v2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "qte.se-v2",
+  "author": "qte development",
+  "keywords": [
+    "gatsby"
+  ],
+  "scripts": {
+    "develop": "gatsby develop",
+    "start": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve",
+    "clean": "gatsby clean",
+    "check-types": "tsc --pretty --noEmit",
+    "check-format": "prettier --check .",
+    "check-lint": "eslint . --ext ts --ext tsx --ext js",
+    "format": "prettier --write .",
+    "test-all": "yarn check-format && yarn check-lint && yarn check-types && yarn build",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "babel-plugin-styled-components": "^1.13.3",
+    "dotenv": "^10.0.0",
+    "gatsby": "^4.0.2",
+    "gatsby-cli": "^4.2.0",
+    "gatsby-plugin-gatsby-cloud": "^4.0.0",
+    "gatsby-plugin-google-fonts": "^1.0.1",
+    "gatsby-plugin-image": "^2.0.0",
+    "gatsby-plugin-manifest": "^4.0.0",
+    "gatsby-plugin-react-helmet": "^5.0.0",
+    "gatsby-plugin-sharp": "^4.0.1",
+    "gatsby-plugin-styled-components": "^5.0.0",
+    "gatsby-source-filesystem": "^4.0.0",
+    "gatsby-source-wordpress": "^6.1.2",
+    "gatsby-transformer-sharp": "^4.0.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-helmet": "^6.1.0",
+    "styled-components": "^5.3.3",
+    "swiper": "^7.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.11",
+    "@types/react": "^17.0.37",
+    "@types/react-dom": "^17.0.10",
+    "@types/react-helmet": "^6.1.4",
+    "@types/styled-components": "^5.1.15",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "eslint": "^8.4.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.27.1",
+    "gatsby-plugin-root-import": "^2.0.8",
+    "husky": "^7.0.0",
+    "prettier": "^2.5.1",
+    "typescript": "^4.5.2"
+  }
+}
